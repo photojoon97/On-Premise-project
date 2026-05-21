@@ -5,7 +5,8 @@
 > **핵심 한 줄 요약:** Cisco 장비 기반의 이중화 네트워크를 구축하고, Ansible + Docker로 서버 배포 전체를 자동화한 인프라 프로젝트
 
 ## 네트워크 토폴로지 개요
-[이미지 추가]
+<img width="1813" height="1121" alt="네트워크 토폴로지-20260521" src="https://github.com/user-attachments/assets/af0d3a47-aea5-451d-b007-50ab92f72328" />
+
 
 ### VLAN 설계 
 #### 본사
