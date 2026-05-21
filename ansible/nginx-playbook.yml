@@ -1,0 +1,85 @@
+all:
+  children:
+    nginx_servers:
+      hosts:
+        nginx1:
+          ansible_host: 192.168.1.10 
+        nginx2:
+          ansible_host: 192.168.1.20
+      vars:
+        ansible_user: root
+        ansible_python_interpreter: /usr/bin/python3
+root@nginx1:~/ansible-infra/nginx# cat nginx-playbook.yml 
+---
+- name: Nginx 로드밸런서 + 백엔드 구성
+  hosts: nginx_servers
+  become: yes
+  gather_facts: yes
+
+  vars:
+    upstream_backends:
+      - { name: 'nginx1', host: '192.168.1.10', port: 8080 }
+      - { name: 'nginx2', host: '192.168.1.20', port: 8080 }
+    lb_listen_port: 80
+    backend_listen_port: 8080
+
+  tasks:
+    - name: Nginx 설치
+      package:
+        name: nginx
+        state: present
+
+    - name: 기본 default.conf 무력화
+      copy:
+        dest: /etc/nginx/conf.d/default.conf
+        content: "# disabled by ansible\n"
+        force: yes
+      notify: restart nginx
+
+    - name: Ubuntu 기본 sites-enabled/default 제거
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: restart nginx
+    
+    - name: 웹루트 디렉터리 보장
+      file:
+        path: /var/www/html
+        state: directory
+        mode: '0755'
+
+    - name: LB 설정 배포 (Jinja2 템플릿)
+      template:
+        src: templates/nginx-lb.conf.j2
+        dest: /etc/nginx/conf.d/lb.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: restart nginx
+
+    - name: 백엔드 식별용 index.html 배포
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: 방화벽 - 80/8080 허용 (Ubuntu)
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop: ['80', '8080']
+      when: ansible_facts['os_family'] == 'Debian'
+      ignore_errors: yes
+
+    - name: Nginx 시작 + enable
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
