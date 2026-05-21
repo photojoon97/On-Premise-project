@@ -1,1 +1,17 @@
 # SRV Farm hosts
+#
+[DNS_servers]
+172.16.20.10/27
+
+[DHCP_servers]
+172.16.20.20/27
+
+[Nginx_servers]
+172.16.20.30/27
+172.16.20.31/27
+
+
+[SRV_Farm:children]
+DNS_servers
+DHCP_servers
+Nginx_servers
