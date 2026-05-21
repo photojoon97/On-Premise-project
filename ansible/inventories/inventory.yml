@@ -1,0 +1,11 @@
+all:
+  children:
+    nginx_servers:
+      hosts:
+        nginx1:
+          ansible_host: 192.168.1.10 
+        nginx2:
+          ansible_host: 192.168.1.20
+      vars:
+        ansible_user: root
+        ansible_python_interpreter: /usr/bin/python3
