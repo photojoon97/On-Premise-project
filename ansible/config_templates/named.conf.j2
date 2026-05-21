@@ -1,0 +1,30 @@
+//Ansible에 의해 자동 생성된 named.conf 파일입니다.
+options {
+    listen-on port 53 { 127.0.0.1; {{ dns_listen_ip }}; };
+    directory       "/var/named";
+    dump-file       "/var/named/data/cache_dump.db";
+    statistics-file "/var/named/data/named_stats.txt";
+    memstatistics-file "/var/named/data/named_mem_stats.txt";
+
+    // 허용할 쿼리 IP 대역 변수 처리
+    allow-query     { localhost; {{ allow_query_range }}; };
+
+    recursion yes;
+    dnssec-validation yes;
+};
+
+logging {
+    channel default_debug {
+        file "data/named.run";
+        severity dynamic;
+    };
+};
+
+zone "." IN {
+    type hint;
+    file "named.ca";
+};
+
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+

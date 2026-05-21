@@ -1,0 +1,46 @@
+- name: DNS 서버 자동 배포 및 설정
+  hosts: dns_servers
+  become: yes  # 타겟 서버에서 root 권한으로 실행
+
+  vars:
+    # Jinja2 템플릿에 주입될 변수 정의
+    dns_listen_ip: "192.168.1.20"         # DNS 서버가 수신 대기할 IP
+    allow_query_range: "192.168.1.0/24" # DNS 질의를 허용할 네트워크 대역
+
+  tasks:
+    - name: 1. BIND (DNS 패키지) 설치
+      ansible.builtin.dnf:            # Ubuntu 기준
+        name:
+          - bind
+          - bind-utils
+        state: present
+
+    - name: 2. Jinja2 템플릿을 사용하여 named.conf 배포
+      ansible.builtin.template:
+        src: named.conf.j2            # 관리자 PC에 있는 Jinja2 파일 경로
+        dest: /etc/named.conf         # 대상 DNS 서버에 저장될 경로
+        owner: root
+        group: named
+        mode: '0640'
+      notify: DNS 서비스 재시작       # 설정 파일이 바뀌었을 때만 아래 핸들러 실행
+
+    - name: 3. 방화벽에서 DNS 서비스(53포트) 허용
+      ansible.builtin.firewalld:
+        service: dns
+        permanent: yes
+        state: enabled
+        immediate: yes
+
+    - name: 4. DNS 서비스 활성화 및 시작
+      ansible.builtin.systemd:
+        name: named
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: DNS 서비스 재시작
+      ansible.builtin.systemd:
+        name: named
+        state: restarted
+
+
