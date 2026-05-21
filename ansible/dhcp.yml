@@ -1,0 +1,46 @@
+- name: Red Hat에 DHCP 서버 배포 및 설정
+  hosts: dhcp_servers
+  become: yes
+  vars:
+    #본인의 VMware 네트워크 환경에 맞게 변수를 수정하세요
+    dhcp_subnet: "192.168.1.0"
+    dhcp_netmask: "255.255.255.0"
+    dhcp_range_start: "192.168.1.2"
+    dhcp_range_end: "192.168.1.100"
+    dhcp_router: "192.168.1.1"
+    dhcp_dns: "8.8.8.8"
+
+  tasks:
+    - name: 1. DHCP 서버 패키지 설치 (RHEL은 dnf 사용)
+      dnf:
+        name: dhcp-server
+        state: present
+
+    - name: 2. 템플릿을 사용하여 dhcpd.conf 파일 배포
+      template:
+        src: dhcpd.conf.j2
+        dest: /etc/dhcp/dhcpd.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart DHCP Service
+
+    - name: 3. 방화벽에 DHCP 서비스 허용 (firewalld)
+      firewalld:
+        service: dhcp
+        permanent: yes
+        state: enabled
+        immediate: yes
+
+    - name: 4. DHCP 서비스 시작 및 부팅 시 자동 시작 등록
+      systemd:
+        name: dhcpd
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart DHCP Service
+      systemd:
+        name: dhcpd
+        state: restarted
+
