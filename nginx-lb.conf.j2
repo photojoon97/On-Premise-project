@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ inventory_hostname }}</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f5f5f5; }
+    h1 { color: #333; }
+    .host { color: #c00; font-weight: bold; }
+    .info { background: #fff; padding: 1em; border-radius: 6px; max-width: 480px; }
+    .info p { margin: 0.4em 0; }
+  </style>
+</head>
+<body>
+  <h1>Hello from <span class="host">{{ inventory_hostname }}</span></h1>
+  <div class="info">
+    <p>호스트: <b>{{ inventory_hostname }}</b></p>
+    <p>IP:    <b>{{ ansible_host }}</b></p>
+    <p>VLAN:  <b>20 (SRV) - 172.16.20.0/27</b></p>
+  </div>
+</body>
+</html>
+root@nginx1:~/ansible-infra/nginx/templates# cat nginx-lb.conf.j2 
+# ===== {{ inventory_hostname }} - Nginx LB + Backend =====
+# Ansible 자동 생성
+
+upstream backend_pool {
+    least_conn;
+{% for be in upstream_backends %}
+    server {{ be.host }}:{{ be.port }} max_fails=3 fail_timeout=10s;  # {{ be.name }}
+{% endfor %}
+}
+
+server {
+    listen {{ lb_listen_port }} default_server;
+    server_name _;
+
+    location / {
+        proxy_pass http://backend_pool;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_connect_timeout 5s;
+        proxy_read_timeout    30s;
+    }
+
+    location /lb-health {
+        return 200 "LB OK on {{ inventory_hostname }}\n";
+        add_header Content-Type text/plain;
+    }
+}
+
+server {
+    listen {{ backend_listen_port }};
+    server_name _;
+
+    root  /var/www/html;
+    index index.html;
+
+    location / { try_files $uri $uri/ =404; }
+}
