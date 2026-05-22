@@ -1,3 +1,8 @@
-admin   Cleartext-Password := "team2"
+admin  Cleartext-Password := "team2"
+       Service-Type = NAS-Prompt-User,
+       Cisco-AVPair = "shell:priv-lvl=15"
+
+user    Cleartext-Password := "team2"
         Service-Type = NAS-Prompt-User,
-        Cisco-AVPair = "shell:priv-lvl=15"
+        Cisco-AVPair = "shell:priv-lvl=1"
+
