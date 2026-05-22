@@ -15,7 +15,7 @@ jobs:
 
       - name: Run Ansible for NMS
         run: |
-          ansible-playbook docker/deploy.yml \
-            -i docker/inventory.ini \
+          ansible-playbook docker/deploy/deploy.yml \
+            -i docker/deploy/inventory.ini \
             --limit nms \
             -e "target=nms"

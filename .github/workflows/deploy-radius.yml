@@ -15,7 +15,7 @@ jobs:
 
       - name: Run Ansible for Radius
         run: |
-          ansible-playbook docker/deploy.yml \
-            -i docker/inventory.ini \
-            --limit radius \
-            -e "target=radius"
+          ansible-playbook docker/deploy/deploy.yml \
+          -i docker/deploy/inventory.ini \
+          --limit radius \
+          -e "target=radius"
