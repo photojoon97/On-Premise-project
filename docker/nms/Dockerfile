@@ -14,7 +14,3 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 161/udp 162/udp
 
 ENTRYPOINT ["/entrypoint.sh"]
-# test
-# test3
-# test4
-# test5
