@@ -1,0 +1,21 @@
+name: Deploy NMS
+
+on:
+  push:
+    paths:
+      - 'docker/nms/**'
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Ansible for NMS
+        run: |
+          ansible-playbook docker/deploy.yml \
+            -i docker/inventory.ini \
+            --limit nms \
+            -e "target=nms"

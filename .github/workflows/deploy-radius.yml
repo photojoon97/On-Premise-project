@@ -1,0 +1,21 @@
+name: Deploy Radius
+
+on:
+  push:
+    paths:
+      - 'docker/radius/**'
+
+jobs:
+  deploy:
+    runs-on: self-hosted          # 172.16.10.15 Runner 받음
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Ansible for Radius
+        run: |
+          ansible-playbook docker/deploy.yml \
+            -i docker/inventory.ini \
+            --limit radius \
+            -e "target=radius"

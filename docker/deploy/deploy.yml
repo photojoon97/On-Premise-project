@@ -1,0 +1,53 @@
+---
+- name: Deploy Docker Container
+  hosts: "{{ target }}"
+  gather_facts: false
+
+  vars:
+    base_dir: /root/On-Premise-project/docker
+    service_map:
+      "172.16.10.20": "radius"
+      "172.16.10.10": "nms"
+
+  tasks:
+    - name: Set service name
+      set_fact:
+        service: "{{ service_map[inventory_hostname] }}"
+
+    - name: Git pull
+      git:
+        repo: "https://github.com/photojoon97/On-Premise-project.git"
+        dest: /root/On-Premise-project
+        version: main
+        force: yes
+
+    - name: Docker build
+      command: >
+        docker build
+        -t {{ service }}:latest
+        {{ base_dir }}/{{ service }}
+
+    - name: Stop and remove existing container
+      shell: |
+        docker stop {{ service }} 2>/dev/null || true
+        docker rm   {{ service }} 2>/dev/null || true
+
+    - name: Run container (radius)
+      when: service == "radius"
+      command: >
+        docker run -d
+        --name radius
+        --restart always
+        -p 1812:1812/udp
+        -p 1813:1813/udp
+        radius:latest
+
+    - name: Run container (nms)
+      when: service == "nms"
+      command: >
+        docker run -d
+        --name nms
+        --restart always
+        -p 161:161/udp
+        -p 162:162/udp
+        nms:latest
