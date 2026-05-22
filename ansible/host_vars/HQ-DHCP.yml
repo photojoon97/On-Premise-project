@@ -1,0 +1,21 @@
+---
+# 본사 DHCP 서버 고유 변수
+dhcp_listen_ip: "172.16.20.20"
+
+# DHCP 서버 자체 대역 선언용 (서비스 구동 필수 뼈대)
+dhcp_server_subnet: "172.16.20.0"
+dhcp_server_netmask: "255.255.255.224"
+
+# [VLAN 30] Office Farm 1 대역 설정
+vlan30_subnet: "172.16.30.0"
+vlan30_netmask: "255.255.255.0"
+vlan30_range_start: "172.16.30.10"
+vlan30_range_end: "172.16.30.254"
+vlan30_router: "172.16.30.1"
+
+# [VLAN 40] Office Farm 2 대역 설정
+vlan40_subnet: "172.16.40.0"
+vlan40_netmask: "255.255.255.0"
+vlan40_range_start: "172.16.40.10"
+vlan40_range_end: "172.16.40.254"
+vlan40_router: "172.16.40.1"

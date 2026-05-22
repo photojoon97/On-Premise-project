@@ -7,7 +7,7 @@ options {
     memstatistics-file "/var/named/data/named_mem_stats.txt";
 
     // 허용할 쿼리 IP 대역 변수 처리
-    allow-query     { localhost; {{ allow_query_range }}; };
+    allow-query     { localhost; {{ allow_query_range }} };
 
     recursion yes;
     dnssec-validation yes;
