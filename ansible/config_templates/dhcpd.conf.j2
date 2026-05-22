@@ -1,13 +1,17 @@
-# dhcpd.conf
-default-lease-time 600;
-max-lease-time 7200;
-
-log-facility local7;
-
-# DHCP를 제공할 서브넷 설정
-subnet {{ dhcp_subnet }} netmask {{ dhcp_netmask }} {
-  range {{ dhcp_range_start }} {{ dhcp_range_end }};
-  option routers {{ dhcp_router }};
-  option domain-name-servers {{ dhcp_dns }};
+# 1. DHCP 서버 자체 대역 선언 (서비스 구동을 위한 필수 뼈대)
+subnet {{ dhcp_server_subnet }} netmask {{ dhcp_server_netmask }} {
 }
 
+# 2. VLAN 30 대역 설정
+subnet {{ vlan30_subnet }} netmask {{ vlan30_netmask }} {
+    range {{ vlan30_range_start }} {{ vlan30_range_end }};
+    option routers {{ vlan30_router }};
+    option domain-name-servers {{ dhcp_dns }};
+}
+
+# 3. VLAN 40 대역 설정
+subnet {{ vlan40_subnet }} netmask {{ vlan40_netmask }} {
+    range {{ vlan40_range_start }} {{ vlan40_range_end }};
+    option routers {{ vlan40_router }};
+    option domain-name-servers {{ dhcp_dns }};
+}
