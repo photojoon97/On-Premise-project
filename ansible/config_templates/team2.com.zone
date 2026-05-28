@@ -10,11 +10,11 @@ $TTL 3H
         IN NS   ns.team2.com.
 
 ;
-@       IN A    172.16.20.30     ; team2.com 접속 시 nginx1로 연결
-www     IN A    172.16.20.30     ; www.team2.com 접속 시 nginx1로 연결
+@       IN A    172.16.20.29     ; team2.com 접속 시 nginx1로 연결
+www     IN A    172.16.20.30     ; www.team2.com 접속 시 nginx2로 연결
 
 ; 
 ns      IN A    172.16.20.10     ; 
 dhcp    IN A    172.16.20.20     ; 
-nginx1  IN A    172.16.20.30     ;
-nginx2  IN A    172.16.20.31     ;
+nginx1  IN A    172.16.20.29     ;
+nginx2  IN A    172.16.20.30     ;
