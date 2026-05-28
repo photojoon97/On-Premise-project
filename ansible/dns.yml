@@ -18,6 +18,15 @@
         mode: '0640'
       notify: DNS 서비스 재시작
 
+    - name: 3. team2.com Zone 파일 배포
+      ansible.builtin.copy:
+        src: config_templates/team2.com.zone
+        dest: /var/named/team2.com.zone
+        owner: root
+        group: named
+        mode: '0640'
+      notify: DNS 서비스 재시작
+
     - name: 3. 방화벽에서 DNS 서비스(53포트) 허용
       ansible.builtin.firewalld:
         service: dns

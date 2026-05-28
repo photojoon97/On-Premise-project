@@ -36,18 +36,20 @@
         state: directory
         mode: '0755'
 
+    # ↙️ 이 부분의 src 경로를 수정했습니다.
     - name: LB 설정 배포 (Jinja2 템플릿)
       template:
-        src: templates/nginx-lb.conf.j2
+        src: config_templates/Nginx/nginx-lb.conf.j2
         dest: /etc/nginx/conf.d/lb.conf
         owner: root
         group: root
         mode: '0644'
       notify: restart nginx
 
+    # ↙️ 이 부분의 src 경로를 수정했습니다.
     - name: 백엔드 식별용 index.html 배포
       template:
-        src: templates/index.html.j2
+        src: config_templates/Nginx/index.html.j2
         dest: /var/www/html/index.html
         mode: '0644'
 
@@ -71,4 +73,3 @@
       service:
         name: nginx
         state: restarted
-
