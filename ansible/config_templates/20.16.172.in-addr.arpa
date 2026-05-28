@@ -12,5 +12,5 @@ $TTL 3H
 ; 
 10      IN PTR  ns.team2.com.         ; 172.16.20.10 -> DNS
 20      IN PTR  dhcp.team2.com.       ; 172.16.20.20 -> DHCP
-30      IN PTR  nginx1.team2.com.     ; 172.16.20.30 -> 웹서버 1
-31      IN PTR  nginx2.team2.com.     ; 172.16.20.31 -> 웹서버 2
+29      IN PTR  nginx1.team2.com.     ; 172.16.20.29 -> 웹서버 1
+30      IN PTR  nginx2.team2.com.     ; 172.16.20.30 -> 웹서버 2
