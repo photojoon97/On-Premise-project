@@ -62,6 +62,24 @@
       when: ansible_facts['os_family'] == 'Debian'
       ignore_errors: yes
 
+    - name: 방화벽 - 80/8080 허용 (RedHat/CentOS)
+      firewalld:
+        port: "{{ item }}/tcp"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop: ['80', '8080']
+      when: ansible_facts['os_family'] == 'RedHat'
+      ignore_errors: yes
+
+    - name: SELinux - Nginx 네트워크 연결 허용 (httpd_can_network_connect)
+      seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+      when: ansible_facts['os_family'] == 'RedHat'
+      ignore_errors: yes    
+
     - name: Nginx 시작 + enable
       service:
         name: nginx
