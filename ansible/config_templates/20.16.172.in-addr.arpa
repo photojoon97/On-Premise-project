@@ -1,0 +1,16 @@
+$TTL 3H
+@       IN SOA  ns.team2.com. root.team2.com. (
+                                        2026052601 ; 시리얼 번호
+                                        1D         ; 리프레시
+                                        1H         ; 리트라이
+                                        1W         ; 익스파이어
+                                        3H )       ; 네거티브 캐시 TTL
+
+; 
+       IN NS   ns.team2.com.
+
+; 
+10      IN PTR  ns.team2.com.         ; 172.16.20.10 -> DNS
+20      IN PTR  dhcp.team2.com.       ; 172.16.20.20 -> DHCP
+30      IN PTR  nginx1.team2.com.     ; 172.16.20.30 -> 웹서버 1
+31      IN PTR  nginx2.team2.com.     ; 172.16.20.31 -> 웹서버 2
