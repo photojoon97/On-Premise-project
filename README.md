@@ -24,6 +24,9 @@
 ## 네트워크 토폴로지 개요
 <img width="1883" height="1093" alt="네트워크 토폴로지-20260519 drawio" src="https://github.com/user-attachments/assets/ea57bf8c-b6dd-475e-8695-d8a03b63b31b" />
 
+## Cisco 장비 사진
+<img width="1748" height="1858" alt="IMG_6292" src="https://github.com/user-attachments/assets/78be18ce-bb80-4dd6-aec4-afaec876fb34" />
+
 
 
 ### VLAN 설계
