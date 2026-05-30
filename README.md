@@ -25,7 +25,7 @@
 <img width="1883" height="1093" alt="네트워크 토폴로지-20260519 drawio" src="https://github.com/user-attachments/assets/ea57bf8c-b6dd-475e-8695-d8a03b63b31b" />
 
 ## Cisco 장비 사진
-<img width="1748" height="1858" alt="IMG_6292" src="https://github.com/user-attachments/assets/78be18ce-bb80-4dd6-aec4-afaec876fb34" />
+<img width="480" alt="IMG_6292" src="https://github.com/user-attachments/assets/78be18ce-bb80-4dd6-aec4-afaec876fb34" />
 
 
 
@@ -69,10 +69,11 @@
 | RADIUS Server | GitHub Actions + Docker | freeradius/freeradius-server:latest | 네트워크 장비 AAA 인증 |
 | NMS Server | GitHub Actions + Docker | net-snmp, net-snmp-utils | SNMP 수집 / Trap 수신 |
 
-* CI/CD 및 컨테이너 환경 (NMS, RADIUS)
+### CI/CD 및 컨테이너 환경 (NMS, RADIUS)
   * GitHub Actions: 코드가 Push되면 내부망에 구축된 Self-hosted Runner가 동작하여 외부 노출 없이 안전하게 파이프라인을 실행합니다.
   * Docker: NMS와 RADIUS 등 지속적인 관리가 필요한 애플리케이션은 워크플로우를 통해 Docker 컨테이너로 자동 빌드 및 배포되도록 구성했습니다.
-* IaC(Ansible) 기반 인프라 구성 (DNS, DHCP, Nginx)
+
+### IaC(Ansible) 기반 인프라 구성 (DNS, DHCP, Nginx)
   * Ansible & Jinja2: DNS, DHCP, Web(Nginx) 서버는 Ansible Playbook을 실행해 패키지 설치부터 환경 설정까지 구성합니다. 장비별 가변 데이터는 Jinja2 템플릿으로 렌더링하여 배포 유연성을 높였습니다.
 
 ### 도입 장비 수량 요약
