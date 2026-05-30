@@ -6,8 +6,8 @@
 
   vars:
     upstream_backends:
-      - { name: 'nginx1', host: '172.16.20.12', port: 8080 }
-      - { name: 'nginx2', host: '172.16.20.13', port: 8080 }
+      - { name: 'nginx1', host: '172.16.20.29', port: 8080 }
+      - { name: 'nginx2', host: '172.16.20.30', port: 8080 }
     lb_listen_port: 80
     backend_listen_port: 8080
 
@@ -36,18 +36,20 @@
         state: directory
         mode: '0755'
 
+    # ↙️ 이 부분의 src 경로를 수정했습니다.
     - name: LB 설정 배포 (Jinja2 템플릿)
       template:
-        src: templates/nginx-lb.conf.j2
+        src: config_templates/Nginx/nginx-lb.conf.j2
         dest: /etc/nginx/conf.d/lb.conf
         owner: root
         group: root
         mode: '0644'
       notify: restart nginx
 
+    # ↙️ 이 부분의 src 경로를 수정했습니다.
     - name: 백엔드 식별용 index.html 배포
       template:
-        src: templates/index.html.j2
+        src: config_templates/Nginx/index.html.j2
         dest: /var/www/html/index.html
         mode: '0644'
 
@@ -60,6 +62,24 @@
       when: ansible_facts['os_family'] == 'Debian'
       ignore_errors: yes
 
+    - name: 방화벽 - 80/8080 허용 (RedHat/CentOS)
+      firewalld:
+        port: "{{ item }}/tcp"
+        permanent: yes
+        immediate: yes
+        state: enabled
+      loop: ['80', '8080']
+      when: ansible_facts['os_family'] == 'RedHat'
+      ignore_errors: yes
+
+    - name: SELinux - Nginx 네트워크 연결 허용 (httpd_can_network_connect)
+      seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+      when: ansible_facts['os_family'] == 'RedHat'
+      ignore_errors: yes    
+
     - name: Nginx 시작 + enable
       service:
         name: nginx
@@ -71,4 +91,3 @@
       service:
         name: nginx
         state: restarted
-

@@ -5,8 +5,8 @@ HQ-DNS ansible_host=172.16.20.10
 HQ-DHCP ansible_host=172.16.20.20
 
 [nginx_servers]
-Nginx1 ansible_host=172.16.20.30
-Nginx2 ansible_host=172.16.20.31
+Nginx1 ansible_host=172.16.20.29
+Nginx2 ansible_host=172.16.20.30
 
 [srv_farm:children]
 dns_servers
