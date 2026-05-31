@@ -1,0 +1,22 @@
+name: Deploy NMS Trap
+
+on:
+  push:
+    paths:
+      - 'docker/nms_trap/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Ansible for NMS Trap
+        run: |
+          ansible-playbook docker/deploy/deploy.yml \
+            -i docker/deploy/inventory.ini \
+            --limit nms_trap \
+            -e "target=nms_trap"

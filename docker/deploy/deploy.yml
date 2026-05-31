@@ -5,15 +5,9 @@
 
   vars:
     base_dir: /root/On-Premise-project/docker
-    service_map:
-      "172.16.10.20": "radius"
-      "172.16.10.10": "nms"
+    service: "{{ target }}"
 
   tasks:
-    - name: Set service name
-      set_fact:
-        service: "{{ service_map[inventory_hostname] }}"
-
     - name: Git pull
       git:
         repo: "https://github.com/photojoon97/On-Premise-project.git"
@@ -49,5 +43,13 @@
         --name nms
         --restart always
         -p 161:161/udp
-        -p 162:162/udp
         nms:latest
+
+    - name: Run container (nms_trap)
+      when: service == "nms_trap"
+      command: >
+        docker run -d
+        --name nms_trap
+        --restart always
+        -p 162:162/udp
+        nms_trap:latest

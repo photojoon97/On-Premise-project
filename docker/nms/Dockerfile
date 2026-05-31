@@ -3,14 +3,8 @@ FROM rockylinux:9
 RUN dnf install -y net-snmp net-snmp-utils && \
     dnf clean all
 
-COPY conf/snmpd.conf    /etc/snmp/snmpd.conf
-COPY conf/snmptrapd.conf /etc/snmp/snmptrapd.conf
+COPY conf/snmpd.conf /etc/snmp/snmpd.conf
 
-RUN mkdir -p /var/log/snmptrapd
+EXPOSE 161/udp
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-EXPOSE 161/udp 162/udp
-
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["snmpd", "-f", "-Lo"]
