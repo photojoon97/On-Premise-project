@@ -1,8 +1,7 @@
-admin  Cleartext-Password := "team2"
+{{ radius_admin_user }}  Cleartext-Password := "{{ radius_admin_password }}"
        Service-Type = NAS-Prompt-User,
        Cisco-AVPair = "shell:priv-lvl=15"
 
-user    Cleartext-Password := "team2"
+{{ radius_user_user }}    Cleartext-Password := "{{ radius_user_password }}"
         Service-Type = NAS-Prompt-User,
         Cisco-AVPair = "shell:priv-lvl=1"
-

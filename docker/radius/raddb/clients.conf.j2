@@ -1,0 +1,11 @@
+{% for client in radius_clients %}
+# ---- {{ client.name }} ----
+client {{ client.name }} {
+        ipaddr    = {{ client.ip }}
+        secret    = {{ client.secret }}
+{% if client.shortname is defined %}
+        shortname = {{ client.shortname }}
+{% endif %}
+}
+
+{% endfor %}

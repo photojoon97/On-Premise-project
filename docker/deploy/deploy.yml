@@ -8,6 +8,22 @@
     service: "{{ target }}"
 
   tasks:
+    - name: Load radius vault vars
+      when: service == "radius"
+      include_vars: "{{ playbook_dir }}/../../radius/vars/vault.yml"
+
+    - name: Render RADIUS users template
+      when: service == "radius"
+      template:
+        src: "{{ playbook_dir }}/../../radius/raddb/users.j2"
+        dest: "{{ base_dir }}/radius/raddb/users"
+
+    - name: Render RADIUS clients.conf template
+      when: service == "radius"
+      template:
+        src: "{{ playbook_dir }}/../../radius/raddb/clients.conf.j2"
+        dest: "{{ base_dir }}/radius/raddb/clients.conf"
+
     - name: Git pull
       git:
         repo: "https://github.com/photojoon97/On-Premise-project.git"
